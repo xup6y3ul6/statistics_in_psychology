@@ -1,0 +1,12 @@
+name: grouping
+title:
+username:
+account: ebg408
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1170838
+bundleId: 2402217
+url: https://ebg408.shinyapps.io/grouping/
+when: 1568104644.79589
+asMultiple: FALSE
+asStatic: FALSE
