@@ -83,8 +83,6 @@ shinyServer(function(input, output) {
             geom_histogram(stat = "identity") +
             geom_text(aes(label = number, y = number/2), color = "white") +
             geom_hline(yintercept = 30, color = "red", linetype = "dashed") +
-            labs(title = "實習課能夠參與累積人數",
-                 subtitle = "由於可以複選，不代實際班級人數會與圖中相同，下圖僅供參考") +
             scale_y_continuous(breaks = seq(0, 45, 5)) +
             theme(text = element_text(family = "黑體-繁 中黑"))
         

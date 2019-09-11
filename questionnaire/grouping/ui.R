@@ -8,17 +8,24 @@ shinyUI(fluidPage(
     shinyjs::extendShinyjs(text = "shinyjs.refresh = function() { location.reload(); }"),
     
     # Application title
-    titlePanel("心理學教育統計分組表單"),
+    titlePanel("心理及教育統計學上_分組表單"),
     
-    wellPanel(
-        h4("拉啦啦啦"),
+    wellPanel(id = "instruction",
+        h4("各位同學大家好~"),
+        br(),
+        h4("為了幫助大家學習統計和應用 R 軟體進行分析，本課程規定同學必須在四個實習課中擇一參加。"),
+        h4("四個時段分別由不同助教帶領，但是使用相同的課程教材，
+           因此依自己方便的時間自由填答即可。"),
+        h4("之後會考量教室大小與填答狀況，以郵件通知大家。"),
+        br(),
+        h4("如果有任何問題，歡迎聯絡助教或寄信到 r08227112@ntu.edu.tw。"),
         h4("心統助教群", class = "align_right"), 
         br(), br()
     ),
 
     # Sidebar with a slider input for number of bins
     sidebarLayout(
-        sidebarPanel(width = 5,
+        sidebarPanel(id = "sidebar", width = 5,
             div(id = "form",
                 span("*", class = "font_red"), span("(必填)"), br(), br(),
                 textInput("name", labelMandatory("姓名："), ""),
@@ -36,10 +43,16 @@ shinyUI(fluidPage(
                 
                 hr(),
                 
-                selectInput("os", "你電腦的作業系統",
-                            choices = c("Win7", "Win8", "Win10", "Mac", "Linux", "Other")),
-                sliderInput("credit", "你這學期預計修幾學分", min = 1, max = 30, value = 15),
-                textInput("hight", "你認為你的身高多少 cm（自由心證 XD）", ""),
+                selectizeInput("os", "你/妳電腦的作業系統",
+                               choices = c("Win7", "Win8", "Win10", "Mac", "Linux", "Other"),
+                               options = list(placeholder = 'Please select an option below',
+                                              onInitialize = I('function() { this.setValue(""); }'))),
+                sliderInput("credit", "你/妳這學期預計修幾學分", min = 1, max = 30, value = 1),
+                textInput("hight", "你/妳認為的身高多少 cm（自由心證 XD）", ""),
+                selectizeInput("gender", "你/妳的性別", 
+                               choices = c("Male", "Female", "Other"),
+                               options = list(placeholder = 'Please select an option below',
+                                              onInitialize = I('function() { this.setValue(""); }'))),
                 
                 actionButton("submit", "提交", class = "btn-primary")
             ),
