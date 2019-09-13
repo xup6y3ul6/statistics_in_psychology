@@ -58,21 +58,24 @@ shinyServer(function(input, output) {
         shinyjs::hide("thankyou_msg")
     }) 
     
-    observeEvent(input$refresh, {
-        shinyjs::js$refresh()
-    })
+    # observeEvent(input$refresh, {
+    #     shinyjs::js$refresh()
+    # })
     
-    data <- reactive({loadData()})
+    data <- reactiveValues(value = loadData())
+    
+    observeEvent(input$refresh, {data$value <- updateData(data$value)})
+    
     
     output$responsesPlot <- renderPlot({
-        .time <- strsplit(data()$time, "/")
+        .time <- strsplit(data$value$time, "/")
         .Mon <- sapply(.time, function(x){"Mon" %in% x})
         .Wed <- sapply(.time, function(x){"Wed" %in% x})
         .Thu <- sapply(.time, function(x){"Thu" %in% x})
         .Fri <- sapply(.time, function(x){"Fri" %in% x})
         .None <- sapply(.time, function(x){"None" %in% x})
         
-        df <- data() %>% 
+        df <- data$value %>% 
             select(id) %>% 
             add_column(Mon = .Mon, Wed = .Wed, Thu = .Thu, Fri = .Fri, None = .None) %>% 
             gather(key = "day", value = "attend", -1, factor_key = TRUE) %>% 
@@ -98,7 +101,7 @@ shinyServer(function(input, output) {
     )
     
     output$responsesTable <- renderDataTable({
-        datatable(data(),
+        datatable(data$value %>% select(-filesName),
                   options = list(lengthChange = FALSE))
     })
 

@@ -58,7 +58,7 @@ labelMandatory <- function(label) {
 }
 
 # save the response upon submission
-fieldsAll <- c("name", "id", "department", "time", "os", "credit", "hight")
+fieldsAll <- c("name", "id", "department", "time", "os", "credit", "hight", "gender")
 fieldsMandatory <- c("name", "id", "department", "time")
 outputDir <- file.path("statistics_in_psychology", "grouping_responses")
 epochTime <- function() {as.integer(Sys.time())}
@@ -83,5 +83,19 @@ loadData <- function() {
                  colClasses = "character")
   data <- bind_rows(data)
   data$timestamp <- as.POSIXct(as.integer(data$timestamp), origin = "1970-01-01")
+  data$filesName <- filesInfo$name
   return(data)
+}
+
+updateData <- function(data){
+  filesInfo_old <- data["filesName"]
+  filesInfo_new <- anti_join(drop_dir(outputDir), filesInfo_old, by = c("name" = "filesName"))
+  filePaths_new <- filesInfo_new$path_display
+  data_new <- lapply(filePaths_new, drop_read_csv, stringsAsFactors = FALSE, 
+                     colClasses = "character")
+  data_new <- bind_rows(data_new)
+  data_new$timestamp <- as.POSIXct(as.integer(data_new$timestamp), origin = "1970-01-01")
+  data_new$filesName <- filesInfo_new$name
+  data_update <- rbind(data, data_new)
+  return(data_update)
 }
